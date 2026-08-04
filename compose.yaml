@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      network: host
     image: local/jupyter-pytorch-opencode:cuda12-py311
     container_name: jupyter
     hostname: jupyter

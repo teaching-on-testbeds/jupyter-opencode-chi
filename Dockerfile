@@ -13,14 +13,7 @@ RUN apt-get update \
         gpg \
         openssh-client \
         wget \
-    && mkdir -p -m 755 /etc/apt/keyrings \
-    && wget -qO /etc/apt/keyrings/githubcli-archive-keyring.gpg \
-        https://cli.github.com/packages/githubcli-archive-keyring.gpg \
-    && chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
-        > /etc/apt/sources.list.d/github-cli.list \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends gh \
+	gh \
     && rm -rf /var/lib/apt/lists/*
 
 USER ${NB_UID}
@@ -28,8 +21,9 @@ USER ${NB_UID}
 ENV PATH="/home/jovyan/.opencode/bin:${PATH}"
 ENV OPENCODE_PORT="4096"
 
-RUN curl -fsSL https://opencode.ai/install | bash \
-    && mkdir -p \
+RUN curl -fsSL https://opencode.ai/install | bash
+
+RUN mkdir -p \
         /home/jovyan/work \
         /home/jovyan/.config/opencode \
         /home/jovyan/.cache/opencode \
