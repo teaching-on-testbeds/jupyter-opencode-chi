@@ -1,0 +1,6 @@
+services:
+  jupyter:
+    volumes:
+      - "${HOST_SSH_DIR:-./host-ssh}:/home/jovyan/.ssh:ro"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

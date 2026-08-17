@@ -16,6 +16,9 @@ RUN apt-get update \
 	gh \
     && rm -rf /var/lib/apt/lists/*
 
+# jupyter-vscode-proxy launches code-server as a JupyterLab browser tab.
+RUN curl -fsSL https://code-server.dev/install.sh | sh
+
 USER ${NB_UID}
 
 ENV PATH="/home/jovyan/.opencode/bin:${PATH}"
@@ -25,20 +28,25 @@ RUN curl -fsSL https://opencode.ai/install | bash
 
 RUN mkdir -p \
         /home/jovyan/work \
+        /home/jovyan/.ssh \
         /home/jovyan/.config/opencode \
         /home/jovyan/.cache/opencode \
-        /home/jovyan/.config/gh
+        /home/jovyan/.config/gh \
+    && chmod 0700 /home/jovyan/.ssh
 
 RUN python -m pip install --no-cache-dir \
         aiobotocore==2.12.3 \
         boto3==1.34.69 \
         fsspec==2024.3.1 \
         python-dotenv==1.2.2 \
-        s3fs==2024.3.1
+        s3fs==2024.3.1 \
+        jupyter-server-proxy \
+        jupyter-vscode-proxy==0.7
 
 USER root
 
 COPY start-services.sh /usr/local/bin/start-services.sh
+COPY opencode.json /opt/chameleon/opencode.json
 
 RUN chmod 0755 /usr/local/bin/start-services.sh \
     && chown ${NB_UID}:${NB_GID} /usr/local/bin/start-services.sh \
